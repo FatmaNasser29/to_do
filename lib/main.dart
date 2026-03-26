@@ -47,7 +47,7 @@ class ToDo extends StatelessWidget {
         LoginScreen.routeName: (context) => LoginScreen(),
         RegisterScreen.routeName: (context) => RegisterScreen(),
       },
-      initialRoute: LoginScreen.routeName,
+      initialRoute: RegisterScreen.routeName,
     );
   }
 }
