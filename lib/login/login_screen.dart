@@ -1,18 +1,29 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:to_do/app_text_form_field.dart';
+import 'package:to_do/dialog_utils.dart';
+import 'package:to_do/firebase_codes.dart';
+import 'package:to_do/lay_out/lay_out.dart';
 import 'package:to_do/pallet_colors.dart';
 import 'package:to_do/register/register_screen.dart';
 import 'package:to_do/utils.dart';
 import 'package:to_do/validation_utile.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   static const String routeName = "login";
 
-  TextEditingController email = TextEditingController();
-  TextEditingController password = TextEditingController();
-  GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
   LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  TextEditingController email = TextEditingController();
+
+  TextEditingController password = TextEditingController();
+
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -131,6 +142,51 @@ class LoginScreen extends StatelessWidget {
   }
 
   void login() {
-    formKey.currentState?.validate();
+    if (formKey.currentState?.validate() == true) {
+      signIn();
+    }
+    ;
+  }
+
+  void signIn() async {
+    try {
+      loadingMessageText(context, message: "Please Wait .........");
+      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email.text,
+        password: password.text,
+      );
+      hideLoading(context);
+      showMessageDialog(
+        context,
+        message: "Logged in successfully ",
+        posButtonText: "OK",
+        posButtonOnPressed: () {
+          Navigator.pushNamed(context, LayOut.routeName);
+        },
+      );
+      print(credential.user?.uid);
+    } on FirebaseAuthException catch (e) {
+      String message = "Something went wrong";
+
+      if (e.code == FirebaseCodes.userNotFound ||
+          e.code == FirebaseCodes.wrongPassword ||
+          e.code == FirebaseCodes.invaildCredential) {
+        message = 'Wrong email or password';
+      }
+      print(e.code);
+      hideLoading(context);
+      showMessageDialog(context, message: message, posButtonText: "OK");
+    } catch (e) {
+      String message = "Something went wrong";
+      hideLoading(context);
+      showMessageDialog(
+        context,
+        message: message,
+        posButtonText: "Try again",
+        posButtonOnPressed: () {
+          signIn();
+        },
+      );
+    }
   }
 }
