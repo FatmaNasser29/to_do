@@ -7,6 +7,7 @@ void showMessageDialog(
   String? negButtonText,
   void Function()? posButtonOnPressed,
   void Function()? negButtonOnPressed,
+  bool isCancellable = true,
 }) {
   List<Widget>? actions = [];
   if (posButtonText != null) {
@@ -36,10 +37,15 @@ void showMessageDialog(
     builder: (BuildContext) {
       return AlertDialog(content: Text(message), actions: actions);
     },
+    barrierDismissible: isCancellable,
   );
 }
 
-void loadingMessageText(BuildContext context, String message) {
+void loadingMessageText(
+  BuildContext context, {
+  required String message,
+  bool isCancellable = true,
+}) {
   showDialog(
     context: context,
     builder: (BuildContext) {
@@ -53,5 +59,10 @@ void loadingMessageText(BuildContext context, String message) {
         ),
       );
     },
+    barrierDismissible: isCancellable,
   );
+}
+
+void hideLoading(BuildContext context) {
+  Navigator.pop(context);
 }

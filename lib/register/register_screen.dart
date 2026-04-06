@@ -6,6 +6,7 @@ import 'package:to_do/lay_out/lay_out.dart';
 import 'package:to_do/login/login_screen.dart';
 import 'package:to_do/dialog_utils.dart';
 import 'package:to_do/pallet_colors.dart';
+import 'package:to_do/tasks_screen/tasks_screen.dart';
 import 'package:to_do/utils.dart';
 import 'package:to_do/validation_utile.dart';
 
@@ -174,19 +175,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   void register() {
-    loadingMessageText(context, "Loading....");
-    // showMessageDialog(
-    //   context,
-    //   message: "regestring",
-    //   posButtonText: "ok",
-    //   posButtonOnPressed: () {
-    //     Navigator.pushReplacementNamed(context, LayOut.routeName);
-    //   },
-    //   negButtonText: "back",
-    //   negButtonOnPressed: () {
-    //     Navigator.pushReplacementNamed(context, LoginScreen.routeName);
-    //   },
-    // );
     if (formKey.currentState?.validate() == true) {
       createUserWithEmailAndPassword();
     }
@@ -194,21 +182,42 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   void createUserWithEmailAndPassword() async {
     try {
+      loadingMessageText(context, message: "Please Wait .........");
       final credential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
             email: email.text,
             password: password.text,
           );
-
+      hideLoading(context);
+      showMessageDialog(
+        context,
+        message: "User created successfully ",
+        posButtonText: "OK",
+        posButtonOnPressed: () {
+          Navigator.pushNamed(context, LayOut.routeName);
+        },
+      );
       print(credential.user?.uid);
     } on FirebaseAuthException catch (e) {
+      String message = "Something went wrong";
       if (e.code == FirebaseCodes.weakPassword) {
-        print('The password provided is too weak.');
+        message = 'The password provided is too weak.';
       } else if (e.code == FirebaseCodes.emailAlreadyInUse) {
-        print('The account already exists for that email.');
+        message = 'The account already exists for that email.';
       }
+      hideLoading(context);
+      showMessageDialog(context, message: message, posButtonText: "OK");
     } catch (e) {
-      print(e);
+      String message = "Something went wrong";
+      hideLoading(context);
+      showMessageDialog(
+        context,
+        message: message,
+        posButtonText: "Try again",
+        posButtonOnPressed: () {
+          register();
+        },
+      );
     }
   }
 }
