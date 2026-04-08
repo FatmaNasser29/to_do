@@ -1,12 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:to_do/app_text_form_field.dart';
 import 'package:to_do/firebase_codes.dart';
 import 'package:to_do/lay_out/lay_out.dart';
 import 'package:to_do/login/login_screen.dart';
 import 'package:to_do/dialog_utils.dart';
 import 'package:to_do/pallet_colors.dart';
-import 'package:to_do/tasks_screen/tasks_screen.dart';
+import 'package:to_do/provider/app_auth_provider.dart';
 import 'package:to_do/utils.dart';
 import 'package:to_do/validation_utile.dart';
 
@@ -181,6 +182,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   void createUserWithEmailAndPassword() async {
+    var appAuthProvider = Provider.of<AppAuthProvider>(context, listen: false);
     try {
       loadingMessageText(context, message: "Please Wait .........");
       final credential = await FirebaseAuth.instance
@@ -194,7 +196,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         message: "User created successfully ",
         posButtonText: "OK",
         posButtonOnPressed: () {
-          Navigator.pushNamed(context, LayOut.routeName);
+          Navigator.pushReplacementNamed(context, LayOut.routeName);
         },
       );
       print(credential.user?.uid);

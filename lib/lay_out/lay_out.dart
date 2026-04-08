@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:to_do/login/login_screen.dart';
 import 'package:to_do/pallet_colors.dart';
+import 'package:to_do/provider/app_auth_provider.dart';
 import 'package:to_do/settings/settings_screen.dart';
 import 'package:to_do/tasks_screen/tasks_screen.dart';
 
@@ -19,6 +22,7 @@ class _LayOutState extends State<LayOut> {
 
   @override
   Widget build(BuildContext context) {
+    var appAuthProvider = Provider.of<AppAuthProvider>(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: PalletColors.mainColor,
@@ -26,6 +30,15 @@ class _LayOutState extends State<LayOut> {
           "To Do List",
           style: Theme.of(context).textTheme.titleLarge,
         ),
+        actions: [
+          InkWell(
+            onTap: () {
+              appAuthProvider.logOut();
+              Navigator.pushReplacementNamed(context, LoginScreen.routeName);
+            },
+            child: Icon(Icons.logout),
+          ),
+        ],
       ),
       body: screens[selectedIndex],
       bottomNavigationBar: BottomAppBar(

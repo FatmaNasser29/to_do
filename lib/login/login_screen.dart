@@ -14,7 +14,7 @@ import 'package:to_do/validation_utile.dart';
 class LoginScreen extends StatefulWidget {
   static const String routeName = "login";
 
-  LoginScreen({super.key});
+  const LoginScreen({super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -147,11 +147,10 @@ class _LoginScreenState extends State<LoginScreen> {
     if (formKey.currentState?.validate() == true) {
       signIn();
     }
-    ;
   }
 
   void signIn() async {
-    var appAuthProvider = Provider.of<AppAuthProvider>(context);
+    var appAuthProvider = Provider.of<AppAuthProvider>(context, listen: false);
 
     try {
       loadingMessageText(context, message: "Please Wait .........");
