@@ -1,10 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:to_do/app_text_form_field.dart';
 import 'package:to_do/dialog_utils.dart';
 import 'package:to_do/firebase_codes.dart';
 import 'package:to_do/lay_out/lay_out.dart';
 import 'package:to_do/pallet_colors.dart';
+import 'package:to_do/provider/app_auth_provider.dart';
 import 'package:to_do/register/register_screen.dart';
 import 'package:to_do/utils.dart';
 import 'package:to_do/validation_utile.dart';
@@ -149,11 +151,13 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void signIn() async {
+    var appAuthProvider = Provider.of<AppAuthProvider>(context);
+
     try {
       loadingMessageText(context, message: "Please Wait .........");
-      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email.text,
-        password: password.text,
+      final credential = await appAuthProvider.signInWithEmailAndPassword(
+        email.text,
+        password.text,
       );
       hideLoading(context);
       showMessageDialog(
