@@ -185,11 +185,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
     var appAuthProvider = Provider.of<AppAuthProvider>(context, listen: false);
     try {
       loadingMessageText(context, message: "Please Wait .........");
-      final credential = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(
-            email: email.text,
-            password: password.text,
-          );
+      final credential = await appAuthProvider.createUserWithEmailAndPassword(
+        email.text,
+        password.text,
+      );
       hideLoading(context);
       showMessageDialog(
         context,

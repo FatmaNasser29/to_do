@@ -16,13 +16,12 @@ import 'firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  Provider.debugCheckInvalidValueType = null;
   runApp(
     MultiProvider(
       providers: [
-        Provider<ThemeProvider>(create: (context) => ThemeProvider()),
-        Provider<LocaleProvider>(create: (context) => LocaleProvider()),
-        Provider<AppAuthProvider>(create: (context) => AppAuthProvider()),
+        ChangeNotifierProvider(create: (context) => ThemeProvider()),
+        ChangeNotifierProvider(create: (context) => LocaleProvider()),
+        ChangeNotifierProvider(create: (context) => AppAuthProvider()),
       ],
       child: const ToDo(),
     ),
@@ -33,8 +32,8 @@ class ToDo extends StatelessWidget {
   const ToDo({super.key});
   @override
   Widget build(BuildContext context) {
-    var themeProvider = ThemeProvider();
-    var localeProvider = LocaleProvider();
+    var themeProvider = Provider.of<ThemeProvider>(context);
+    var localeProvider = Provider.of<LocaleProvider>(context);
     var appAuthProvider = Provider.of<AppAuthProvider>(context);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
